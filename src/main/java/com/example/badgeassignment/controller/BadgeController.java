@@ -31,6 +31,10 @@ public class BadgeController {
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody Map<String, Object> payload) {
 
+        if (userDetails == null) {
+            return ResponseEntity.status(403).body("Access Denied: User is not authenticated");
+        }
+
         String emailCom = (String) payload.get("emailCom");
         String emailEmpr = userDetails.getUsername();
         Integer idBadge = (Integer) payload.get("idBadge");
@@ -75,20 +79,6 @@ public class BadgeController {
             return ResponseEntity.ok("Email enviado com sucesso!");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Erro ao enviar email: " + e.getMessage());
-        }
-    }
-
-    @PostMapping("/resgatar")
-    public ResponseEntity<String> resgatarBadge(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @RequestParam Integer idBadge) {
-
-        String emailCom = userDetails.getUsername();
-        try {
-            // Lógica para resgatar o badge, se necessário
-            return ResponseEntity.ok("Badge resgatado com sucesso!");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Erro ao resgatar o badge: " + e.getMessage());
         }
     }
 }

@@ -13,12 +13,12 @@ public class UserService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public UserCommon getUserCommon(String email) {
-        String url = "http://localhost:6002/acessa-info?email=" + email;
+        String url = "http://localhost:7002/acessa-info?email=" + email;
         return restTemplate.getForObject(url, UserCommon.class);
     }
 
     public UserEnterprise getUserEnterprise(String email) {
-        String url = "http://localhost:6003/consultar?email=" + email;
+        String url = "http://localhost:7003/consultar?email=" + email;
         return restTemplate.getForObject(url, UserEnterprise.class);
     }
 }

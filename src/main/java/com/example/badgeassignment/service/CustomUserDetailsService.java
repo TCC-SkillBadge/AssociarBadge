@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String userInfoEndpoint = "http://localhost:6002/acessa-info?usuario=" + username; // Ajuste a URL conforme necessário
+        String userInfoEndpoint = "http://localhost:7002/acessa-info?usuario=" + username; // Ajuste a URL conforme necessário
         UserCommon user = restTemplate.getForObject(userInfoEndpoint, UserCommon.class);
 
         if (user == null) {

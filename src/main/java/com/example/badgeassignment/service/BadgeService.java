@@ -28,7 +28,7 @@ public class BadgeService {
         String confirmationUrl = "http://localhost:8081/api/badges/confirmar-recebimento?token=" + confirmationToken;
 
         // Obtenha dados do ModeloBadge
-        String modeloBadgeUrl = "http://localhost:3001/consultar?id_badge=" + idBadge;
+        String modeloBadgeUrl = "http://localhost:7001/consultar?id_badge=" + idBadge;
         Map<String, Object> modeloBadgeResponse = restTemplate.getForObject(modeloBadgeUrl, Map.class);
         if (modeloBadgeResponse == null || !modeloBadgeResponse.containsKey("imagem_mb")) {
             throw new Exception("Modelo de Badge não encontrado");
