@@ -2,24 +2,22 @@ package com.example.badgeassignment.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.util.Date;
 
 @Entity
 @Data
 @Table(name = "badge")
-@IdClass(BadgeId.class)
 public class Badge {
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "email_com", nullable = false)
     private String emailCom;
 
-    @Id
     @Column(name = "email_empr", nullable = false)
     private String emailEmpr;
 
-    @Id
     @Column(name = "id_badge", nullable = false)
     private Integer idBadge;
 
@@ -33,4 +31,7 @@ public class Badge {
 
     @Column(name = "imagem_b", nullable = false)
     private String imagemB;
+
+    @Column(name = "confirmation_token", unique = true)
+    private String confirmationToken;
 }
