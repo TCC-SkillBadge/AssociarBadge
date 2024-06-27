@@ -2,47 +2,52 @@ package com.example.badgeassignment.controller;
 
 import com.example.badgeassignment.model.Badge;
 import com.example.badgeassignment.service.BadgeService;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.Map;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
-@RequestMapping("/api/badge")
+@RequestMapping("/api/badges")
 public class BadgeController {
+
     @Autowired
     private BadgeService badgeService;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @PostMapping("/atribuir")
-    public ResponseEntity<?> atribuirBadge(
+    public ResponseEntity<Badge> atribuirBadge(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody Map<String, Object> payload) {
 
-        String emailEmpr = userDetails.getUsername();
         String emailCom = (String) payload.get("emailCom");
+        String emailEmpr = userDetails.getUsername();
         Integer idBadge = (Integer) payload.get("idBadge");
-        String imagemB = (String) payload.get("imagemB");
-        Date dtVencimento = (Date) payload.get("dtVencimento");
+        Date dtVencimento = new Date((Long) payload.get("dtVencimento"));
 
         try {
-            Badge badge = badgeService.atribuirBadge(emailCom, emailEmpr, idBadge, imagemB, dtVencimento);
+            Badge badge = badgeService.atribuirBadge(emailCom, emailEmpr, idBadge, dtVencimento);
             return ResponseEntity.ok(badge);
-        } catch (MessagingException e) {
-            return ResponseEntity.status(500).body("Erro ao enviar email de confirmação");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
-    @GetMapping("/confirmar")
-    public ResponseEntity<?> confirmarRecebimento(@RequestParam String email) {
-        // Lógica para confirmar o recebimento do badge
-        return ResponseEntity.ok("Recebimento confirmado para o email: " + email);
+    @GetMapping("/teste-modelo-badge")
+    public ResponseEntity<?> testeModeloBadge(@RequestParam Integer idBadge) {
+        String modeloBadgeUrl = "http://localhost:7001/consultar?id_badge=" + idBadge;
+        try {
+            Map<String, Object> response = restTemplate.getForObject(modeloBadgeUrl, Map.class);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erro ao conectar com o serviço modelo_badge: " + e.getMessage());
+        }
     }
 }

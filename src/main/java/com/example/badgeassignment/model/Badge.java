@@ -8,17 +8,18 @@ import java.util.Date;
 @Entity
 @Data
 @Table(name = "badge")
+@IdClass(BadgeId.class)
 public class Badge {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+    @Id
     @Column(name = "email_com", nullable = false)
     private String emailCom;
 
+    @Id
     @Column(name = "email_empr", nullable = false)
     private String emailEmpr;
 
+    @Id
     @Column(name = "id_badge", nullable = false)
     private Integer idBadge;
 
