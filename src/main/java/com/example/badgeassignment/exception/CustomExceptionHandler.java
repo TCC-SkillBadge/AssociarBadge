@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 @ControllerAdvice
@@ -15,6 +16,12 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(SQLException.class)
+    public ResponseEntity<?> sqlExceptionHandler(SQLException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), "Database error: " + ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(Exception.class)
